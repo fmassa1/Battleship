@@ -1,8 +1,6 @@
 import java.util.ArrayList;
 
 public class GridBox {
-    private int width;
-    private int height;
     private int x;
     private int y;
 
