@@ -1,6 +1,8 @@
-GridBox.class
-Message.class
+BattleshipLogic.class
+BattleshipGame.class
 Client.class
-GuiClient$1.class
 GuiClient.class
 Grid.class
+GridBox.class
+Message.class
+GuiClient$1.class

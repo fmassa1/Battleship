@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -84,6 +85,8 @@ public class GuiClient extends Application{
 		BorderPane borderPane = new BorderPane();
 		borderPane.setTop(enemy);
 		borderPane.setBottom(player);
+		enemy.setAlignment(Pos.CENTER);
+		player.setAlignment(Pos.CENTER);
 
 		primaryStage.setScene(new Scene(borderPane, 600, 700));
 		primaryStage.setTitle("Client");

@@ -1,6 +1,6 @@
 public class BattleshipLogic {
-
-    public BattleshipGame(){
-
+    private int x;
+    public BattleshipLogic(){
+        x =1;
     }
 }
