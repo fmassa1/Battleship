@@ -30,15 +30,19 @@ public class BattleshipGame {
 
     public boolean isOnline() {return online;}
 
+    //public boolean setShipLocation(player.se)
+
     public class Move implements Serializable {
         private static final long serialVersionUID = 42L;
 
         private int x;
         private int y;
+        private boolean ai;
 
-        public Move(int x, int y) {
+        public Move(int x, int y, boolean ai) {
             this.x = x;
             this.y = y;
+            this.ai = ai;
         }
 
     }

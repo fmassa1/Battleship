@@ -1,8 +1,10 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class BattleshipPlayer {
 
     ArrayList<Ship> playerShips;
+    HashMap<String, ArrayList<BattleshipGame.Move>> shipLocations;
     Grid grid;
 
     BattleshipPlayer() {
@@ -26,5 +28,7 @@ public class BattleshipPlayer {
         return health;
     }
     public boolean isShip(int x, int y) {return grid.isShip(x,y);}
+
+    //public boolean setShipLocations(String)
 
 }
