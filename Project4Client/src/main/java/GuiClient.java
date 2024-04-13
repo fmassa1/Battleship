@@ -54,9 +54,27 @@ public class GuiClient extends Application{
 		b1 = new Button("Play AI");
 		b2 = new Button("Play Person");
 		b3 = new Button("Rules");
+		b4 = new Button("Set Position");
+
 
 		b1.setOnAction(e->{primaryStage.setScene(sceneMap.get("game"));});
 		b2.setOnAction(e->{game.setOnline(); primaryStage.setScene(sceneMap.get("game"));});
+
+		b4.setOnAction(e->{
+			String selectedShip = shipDropDown.getValue();
+			String placement = c1.getText();
+			if (selectedShip != null) {
+				if(game.setShipLocation(selectedShip, placement)) {
+					shipDropDown.getItems().remove(selectedShip);
+					updatePlayerGrid();
+				}
+				System.out.println("ship selected!");
+			} else {
+				// Handle case when no ship is selected
+				System.out.println("No ship selected!");
+			}
+		});
+
 
 		sceneMap = new HashMap<String, Scene>();
 
@@ -78,12 +96,11 @@ public class GuiClient extends Application{
 				Button button2 = new Button(Character.toString((char)('A' + row))+(col+1)); // Grid 2
 				button1.setStyle("-fx-font-size:9;" + "-fx-text-fill: rgba(0, 0, 0, 0.5);");
 				button2.setStyle("-fx-font-size:9;" + "-fx-text-fill: rgba(0, 0, 0, 0.5);");
-				button1.setPrefSize(30, 30); // Set button size
-				button2.setPrefSize(30, 30); // Set button size
+				button1.setPrefSize(30, 30);
+				button2.setPrefSize(30, 30);
 				final int r = row;
 				final int c = col;
 				button1.setOnAction(event -> enemyButtonClick(r, c));
-				button2.setOnAction(event -> playerButtonClick(r, c));
  				enemyGridButtons[row][col] = button1;
 				playerGridButtons[row][col] = button2;
 				enemy.add(button1, col, row);
@@ -107,16 +124,18 @@ public class GuiClient extends Application{
 		System.out.println("Button clicked at: " + row + ", " + col);
 		// Add your game logic here
 	}
-	private void playerButtonClick(int row, int col) {
-		Button clickedButton = playerGridButtons[row][col];
-		System.out.println("Setting ship position from: " + clickedButton.getText() + " to " + row + ", " + col);
-
-		clickedButton.setStyle("-fx-background-color: grey;-fx-border-color: black;");
-		clickedButton.setDisable(true); // Disable the button so it cannot be clicked again
-		clickedButton.setText("");
-
+	private void updatePlayerGrid() {
+		// Iterate over the ship coordinates and update the corresponding buttons on the grid
+		for (int row = 0; row < 10; row++) {
+			for (int col = 0; col < 10; col++) {
+				if (game.playerCheckShip(row, col)) {
+					// If the ship is placed at this position, update the button style
+					playerGridButtons[row][col].setStyle("-fx-background-color: gray;");
+					playerGridButtons[row][col].setDisable(true); // Disable the button
+				}
+			}
+		}
 	}
-
 
 	public Scene createStart() {
 
@@ -136,7 +155,6 @@ public class GuiClient extends Application{
 		title = new Text("Place your ships");
 		c1 = new TextField();
 		c1.setPromptText("Enter ship location. Example; A0-A4");
-		b4 = new Button("Set Position");
 		shipDropDown = new ComboBox<>();
 		shipDropDown.getItems().add("Carrier");
 		shipDropDown.getItems().add("Battleship");

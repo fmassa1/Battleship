@@ -30,7 +30,7 @@ public class BattleshipGame {
 
     public boolean isOnline() {return online;}
 
-    //public boolean setShipLocation(player.se)
+    public boolean setShipLocation(String ship, String location) {return player.setShipLocations(ship,location);}
 
     public class Move implements Serializable {
         private static final long serialVersionUID = 42L;
