@@ -13,23 +13,26 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 public class GuiClient extends Application{
 
 	TextField c1;
-	Button b1;
+	Text title;
+	Button b1, b2, b3;
 	HashMap<String, Scene> sceneMap;
 	VBox clientBox;
 	Client clientConnection;
+	BorderPane borderPane;
 
 	ListView<String> listItems2;
 	private Button[][] enemyGridButtons = new Button[10][10]; // Grid 1
 	private Button[][] playerGridButtons = new Button[10][10]; // Grid 2
 	GridPane player = new GridPane();
 	GridPane enemy = new GridPane();
-	Grid playerGrid = new Grid();
+	BattleshipGame game = new BattleshipGame();
 
 
 	public static void main(String[] args) {
@@ -45,15 +48,17 @@ public class GuiClient extends Application{
 
 		clientConnection.start();
 
-		listItems2 = new ListView<String>();
+		b1 = new Button("Play AI");
+		b2 = new Button("Play Person");
+		b3 = new Button("Rules");
 
-		c1 = new TextField();
-		b1 = new Button("Send");
-		b1.setOnAction(e->{clientConnection.send(c1.getText()); c1.clear();});
+		b1.setOnAction(e->{primaryStage.setScene(sceneMap.get("game"));});
+		b2.setOnAction(e->{game.setOnline(); primaryStage.setScene(sceneMap.get("game"));});
 
 		sceneMap = new HashMap<String, Scene>();
 
-		sceneMap.put("client",  createClientGui());
+		sceneMap.put("start",  createStart());
+		sceneMap.put("game", mainGame());
 
 		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			@Override
@@ -81,15 +86,8 @@ public class GuiClient extends Application{
 			}
 		}
 
-		// Layout setup
-		BorderPane borderPane = new BorderPane();
-		borderPane.setTop(enemy);
-		borderPane.setBottom(player);
-		enemy.setAlignment(Pos.CENTER);
-		player.setAlignment(Pos.CENTER);
-
-		primaryStage.setScene(new Scene(borderPane, 600, 700));
-		primaryStage.setTitle("Client");
+		primaryStage.setScene(sceneMap.get("start"));
+		primaryStage.setTitle("Battleship");
 		primaryStage.show();
 
 	}
@@ -100,7 +98,7 @@ public class GuiClient extends Application{
 	private void enemyButtonClick2(int row, int col) {
 		Button clickedButton = enemyGridButtons[row][col];
 		clickedButton.setStyle("-fx-background-color: blue;-fx-border-color: black;");
-		if(playerGrid.isShip(row, col)) {
+		if(game.playerCheckShip(row, col)) {
 			clickedButton.setStyle("-fx-background-color: red;-fx-border-color: black;");
 		}
 		clickedButton.setDisable(true); // Disable the button so it cannot be clicked again
@@ -109,11 +107,25 @@ public class GuiClient extends Application{
 	}
 
 
-	public Scene createClientGui() {
-		VBox clientBox = new VBox(10, listItems2, c1, b1);
-		clientBox.setStyle("-fx-font-family: 'serif';");
-		return new Scene(clientBox, 600, 500);
+	public Scene createStart() {
+		title = new Text("Battleship");
+		clientBox = new VBox(20, title, b1, b2, b3);
+		clientBox.setAlignment(Pos.CENTER);
+		borderPane = new BorderPane();
+		borderPane.setPadding(new Insets(20));
+		borderPane.setCenter(clientBox);
+		clientBox.setStyle("-fx-background-radius: 50;" + "-fx-background-color: #F2EFE5;");
+		borderPane.setStyle("-fx-background-color: #C7C8CC;");
+		return new Scene(borderPane, 400, 300);
 
+	}
+	public Scene mainGame() {
+		borderPane = new BorderPane();
+		borderPane.setTop(enemy);
+		borderPane.setBottom(player);
+		enemy.setAlignment(Pos.CENTER);
+		player.setAlignment(Pos.CENTER);
+		return  new Scene(borderPane, 600, 700);
 	}
 
 }

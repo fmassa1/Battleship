@@ -25,5 +25,6 @@ public class BattleshipPlayer {
         }
         return health;
     }
+    public boolean isShip(int x, int y) {return grid.isShip(x,y);}
 
 }

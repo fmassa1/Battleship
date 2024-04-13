@@ -1,10 +1,14 @@
 import javafx.scene.layout.GridPane;
+import jdk.tools.jlink.internal.Platform;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class BattleshipGame {
     BattleshipPlayer player;
     BattleshipPlayer enemy;
+
+    boolean online = false;
 
     public BattleshipGame() {
         player = new BattleshipPlayer();
@@ -19,5 +23,23 @@ public class BattleshipGame {
             return "p1";
         }
         return "none";
+    }
+    public boolean playerCheckShip(int x, int y){return player.isShip(x,y);}
+    public boolean enemyCheckShip(int x, int y){return enemy.isShip(x,y);}
+    public void setOnline(){online = true;}
+
+    public boolean isOnline() {return online;}
+
+    public class Move implements Serializable {
+        private static final long serialVersionUID = 42L;
+
+        private int x;
+        private int y;
+
+        public Move(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
     }
 }
