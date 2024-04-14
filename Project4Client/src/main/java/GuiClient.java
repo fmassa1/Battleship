@@ -72,6 +72,7 @@ public class GuiClient extends Application{
 					if(shipDropDown.getItems().isEmpty()) {
 						hBox.getChildren().add(b5);
 						b4.setDisable(true);
+						c1.setDisable(true);
 						shipDropDown.setDisable(true);
 					}
 				}
@@ -122,7 +123,7 @@ public class GuiClient extends Application{
 	private void enemyButtonClick(int row, int col) {
 		Button clickedButton = enemyGridButtons[row][col];
 		clickedButton.setStyle("-fx-background-color: blue;-fx-border-color: black;");
-		if(game.playerCheckShip(row, col)) {
+		if(game.playerCheckShip(col, row)) {
 			clickedButton.setStyle("-fx-background-color: red;-fx-border-color: black;");
 		}
 		clickedButton.setDisable(true); // Disable the button so it cannot be clicked again
@@ -134,9 +135,9 @@ public class GuiClient extends Application{
 		for (int row = 0; row < 10; row++) {
 			for (int col = 0; col < 10; col++) {
 				if (game.playerCheckShip(col, row)) {
-					// If the ship is placed at this position, update the button style
 					playerGridButtons[row][col].setStyle("-fx-background-color: gray;");
-					playerGridButtons[row][col].setDisable(true); // Disable the button
+					playerGridButtons[row][col].setDisable(true);
+					playerGridButtons[row][col].setText("");
 				}
 			}
 		}
@@ -161,11 +162,11 @@ public class GuiClient extends Application{
 		c1 = new TextField();
 		c1.setPromptText("Enter ship location, by smaller position to bigger. Example; A1-A5");
 		shipDropDown = new ComboBox<>();
-		shipDropDown.getItems().add("Carrier");
-		shipDropDown.getItems().add("Battleship");
-		shipDropDown.getItems().add("Cruiser");
-		shipDropDown.getItems().add("Submarine");
-		shipDropDown.getItems().add("Destroyer");
+		shipDropDown.getItems().add("Carrier (length 5)");
+		shipDropDown.getItems().add("Battleship (length 4)");
+		shipDropDown.getItems().add("Cruiser (length 3)");
+		shipDropDown.getItems().add("Submarine (length 3)");
+		shipDropDown.getItems().add("Destroyer (length 2)");
 		hBox = new HBox(shipDropDown, b4);
 		hBox.setAlignment(Pos.CENTER);
 		clientBox = new VBox(10, title, c1, hBox);

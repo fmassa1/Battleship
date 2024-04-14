@@ -1,9 +1,9 @@
 Ship.class
 BattleshipGame.class
 Client.class
-BattleshipGame$Move.class
 BattleshipPlayer.class
 GuiClient.class
 Grid.class
 GridBox.class
+Move.class
 GuiClient$1.class
