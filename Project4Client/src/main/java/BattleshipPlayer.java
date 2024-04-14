@@ -53,12 +53,14 @@ public class BattleshipPlayer {
         System.out.println("("+x1+","+y1+")");
         System.out.println("("+x2+","+y2+")");
         if(y1 == y2) {
+            if(x1 > x2) {int temp = x1; x1=x2; x2=temp;}
             for(int i = x1; i <= x2; i++) {
                 if(grid.isShip(i,y1)){return false;}
             }
             for(int i = x1; i <= x2; i++) {grid.setShip(i, y1);}
         }
         else if(x1 == x2) {
+            if(y1 > y2) {int temp = y1; y1=y2; y2=temp;}
             for (int i = y1; i <= y2; i++) {
                 if (grid.isShip(x1, i)) {return false;}
             }

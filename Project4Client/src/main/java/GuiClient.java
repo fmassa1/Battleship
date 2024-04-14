@@ -72,13 +72,11 @@ public class GuiClient extends Application{
 					if(shipDropDown.getItems().isEmpty()) {
 						hBox.getChildren().add(b5);
 						b4.setDisable(true);
-						shipDropDown.disarm();
+						shipDropDown.setDisable(true);
 					}
 				}
-				System.out.println("ship selected!");
 			} else {
-				// Handle case when no ship is selected
-				System.out.println("No ship selected!");
+				c1.setPromptText("Error, try again");
 			}
 		});
 
@@ -161,7 +159,7 @@ public class GuiClient extends Application{
 
 		title = new Text("Place your ships");
 		c1 = new TextField();
-		c1.setPromptText("Enter ship location. Example; A0-A4");
+		c1.setPromptText("Enter ship location, by smaller position to bigger. Example; A1-A5");
 		shipDropDown = new ComboBox<>();
 		shipDropDown.getItems().add("Carrier");
 		shipDropDown.getItems().add("Battleship");
