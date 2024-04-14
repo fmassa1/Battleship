@@ -13,7 +13,7 @@ public class Grid {
             grid.add(newRow);
         }
     }
-    public boolean isShip(int x, int y) {return grid.get(x).get(y).hasShip();}
+    public boolean isShip(int x, int y) {return grid.get(y).get(x).hasShip();}
 
     public void setShip(int x, int y) {grid.get(y).get(x).setShip();}
 

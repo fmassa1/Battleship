@@ -22,7 +22,7 @@ public class GuiClient extends Application{
 
 	TextField c1;
 	Text title;
-	Button b1, b2, b3, b4;
+	Button b1, b2, b3, b4, b5;
 	HashMap<String, Scene> sceneMap;
 	VBox clientBox;
 	HBox hBox;
@@ -55,6 +55,7 @@ public class GuiClient extends Application{
 		b2 = new Button("Play Person");
 		b3 = new Button("Rules");
 		b4 = new Button("Set Position");
+		b5 = new Button("Begin Game");
 
 
 		b1.setOnAction(e->{primaryStage.setScene(sceneMap.get("game"));});
@@ -67,6 +68,12 @@ public class GuiClient extends Application{
 				if(game.setShipLocation(selectedShip, placement)) {
 					shipDropDown.getItems().remove(selectedShip);
 					updatePlayerGrid();
+					c1.clear();
+					if(shipDropDown.getItems().isEmpty()) {
+						hBox.getChildren().add(b5);
+						b4.setDisable(true);
+						shipDropDown.disarm();
+					}
 				}
 				System.out.println("ship selected!");
 			} else {
@@ -128,7 +135,7 @@ public class GuiClient extends Application{
 		// Iterate over the ship coordinates and update the corresponding buttons on the grid
 		for (int row = 0; row < 10; row++) {
 			for (int col = 0; col < 10; col++) {
-				if (game.playerCheckShip(row, col)) {
+				if (game.playerCheckShip(col, row)) {
 					// If the ship is placed at this position, update the button style
 					playerGridButtons[row][col].setStyle("-fx-background-color: gray;");
 					playerGridButtons[row][col].setDisable(true); // Disable the button
