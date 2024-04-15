@@ -62,6 +62,8 @@ public class Server{
 		class ClientThread extends Thread{
 			
 			boolean pvp = false;
+
+			ArrayList<Move> aiMoves = new ArrayList<>();
 			Socket connection;
 			int count;
 			ObjectInputStream in;
@@ -81,9 +83,22 @@ public class Server{
 					catch(Exception e) {}
 				}
 			}
-			public void moveGenerator(ClientThread x){
+
+
+			public void moveGenerator(ClientThread c){
 				try {
-					x.out.writeObject(new Move(0, 0));
+					if(aiMoves.isEmpty()) {
+						for (int i = 0; i < 10; i++) {
+							for (int x = 0; x < 10; x++) {
+								aiMoves.add(new Move(x, i));
+							}
+						}
+					}
+					Random random = new Random();
+					int index = random.nextInt(aiMoves.size());
+					Move sendingMove = aiMoves.get(index);
+					aiMoves.remove(index);
+					c.out.writeObject(sendingMove);
 				}
 				catch(Exception e) {}
 
