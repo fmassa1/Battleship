@@ -61,7 +61,7 @@ public class GuiClient extends Application{
 
 
 		b1.setOnAction(e->{primaryStage.setScene(sceneMap.get("game"));});
-		b2.setOnAction(e->{game.setOnline(); clientConnection.send("queue");primaryStage.setScene(sceneMap.get("game"));});
+		b2.setOnAction(e->{game.setOnline(); clientConnection.send("queue");primaryStage.setScene(sceneMap.get("queue"));});
 
 		b4.setOnAction(e->{
 			String selectedShip = shipDropDown.getValue();
@@ -89,6 +89,7 @@ public class GuiClient extends Application{
 		sceneMap = new HashMap<String, Scene>();
 
 		sceneMap.put("start",  createStart());
+		sceneMap.put("queue",  queueScreen());
 		sceneMap.put("game", mainGame());
 
 		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
@@ -158,9 +159,18 @@ public class GuiClient extends Application{
 			}
 		}
 	}
-
+	public Scene queueScreen() {
+		title = new Text("Waiting for another player");
+		clientBox = new VBox(20, title);
+		clientBox.setAlignment(Pos.CENTER);
+		borderPane = new BorderPane();
+		borderPane.setPadding(new Insets(20));
+		borderPane.setCenter(clientBox);
+		clientBox.setStyle("-fx-background-radius: 50;" + "-fx-background-color: #F2EFE5;");
+		borderPane.setStyle("-fx-background-color: #C7C8CC;");
+		return new Scene(borderPane, 400, 300);
+	}
 	public Scene createStart() {
-
 		title = new Text("Battleship");
 		clientBox = new VBox(20, title, b1, b2, b3);
 		clientBox.setAlignment(Pos.CENTER);
@@ -170,10 +180,8 @@ public class GuiClient extends Application{
 		clientBox.setStyle("-fx-background-radius: 50;" + "-fx-background-color: #F2EFE5;");
 		borderPane.setStyle("-fx-background-color: #C7C8CC;");
 		return new Scene(borderPane, 400, 300);
-
 	}
 	public Scene mainGame() {
-
 		title = new Text("Place your ships");
 		c1 = new TextField();
 		c1.setPromptText("Enter ship location, by smaller position to bigger. Example; A1-A5");
