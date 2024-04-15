@@ -1,6 +1,9 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class GridBox {
+public class GridBox implements Serializable {
+    private static final long serialVersionUID = 42L;
+
     private int x;
     private int y;
 

@@ -1,6 +1,8 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Grid {
+public class Grid implements Serializable {
+    private static final long serialVersionUID = 42L;
     private ArrayList<ArrayList<GridBox>> grid;
 
     public Grid(){
@@ -9,6 +11,21 @@ public class Grid {
             ArrayList<GridBox> newRow = new ArrayList<>();
             for(int col = 0; col < 10;col++) {
                 newRow.add(new GridBox(row, col));
+            }
+            grid.add(newRow);
+        }
+    }
+    public Grid(Grid otherGrid) {
+        this.grid = new ArrayList<>();
+        for (int row = 0; row < 10; row++) {
+            ArrayList<GridBox> newRow = new ArrayList<>();
+            for (int col = 0; col < 10; col++) {
+                GridBox otherBox = otherGrid.grid.get(row).get(col);
+                GridBox newBox = new GridBox(otherBox.getX(), otherBox.getY());
+                if(otherBox.contains().equals("ship")) {
+                    newBox.setShip();
+                }
+                newRow.add(newBox);
             }
             grid.add(newRow);
         }

@@ -25,8 +25,9 @@ public class BattleshipGame {
         return "none";
     }
     public String playerCheckPoint(int x, int y){return player.pointStatus(x,y);}
+    public Grid getPlayerGrid() {return player.getGrid();}
 
-    public String enemyCheckShip(int x, int y){return enemy.pointStatus(x,y);}
+    public String enemyCheckPoint(int x, int y){return enemy.pointStatus(x,y);}
     public void setOnline(){online = true;}
 
     public boolean isOnline() {return online;}

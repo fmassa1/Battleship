@@ -43,6 +43,10 @@ public class Client extends Thread{
 				else if(data instanceof String) {
 					callback.accept(data.toString());
 				}
+				else if(data instanceof Grid) {
+					Grid enemyGrid = (Grid) data;
+					callback.accept(enemyGrid);
+				}
 			}
 			catch(Exception e) {
 

@@ -57,6 +57,12 @@ public class GuiClient extends Application{
 						primaryStage.setScene(sceneMap.get("game"));
 					}
 				}
+				else if (data instanceof Grid) {
+					Grid enemyGrid = (Grid) data;
+					if(game.isOnline()) {
+						game.enemy.setBoard(enemyGrid);
+					}
+				}
 
 			});
 		});
@@ -88,11 +94,22 @@ public class GuiClient extends Application{
 						shipDropDown.setDisable(true);
 					}
 				}
+				else {
+					c1.setPromptText("Error, try again");
+				}
 			} else {
 				c1.setPromptText("Error, try again");
 			}
 		});
-		b5.setOnAction(e->{hBox.setVisible(false); c1.setVisible(false);title.setText("Your move");});
+		b5.setOnAction(e->{
+			hBox.setVisible(false);
+			c1.setVisible(false);
+			title.setText("Your move");
+			if(game.isOnline()) {
+				Grid sending = new Grid(game.getPlayerGrid());
+				clientConnection.send(sending);
+			}
+		});
 
 
 
@@ -138,7 +155,7 @@ public class GuiClient extends Application{
 	private void enemyButtonClick(int row, int col) {
 		Button clickedButton = enemyGridButtons[row][col];
 		clickedButton.setStyle("-fx-background-color: blue;-fx-border-color: black;");
-		if(game.playerCheckPoint(col, row).equals("ship")) {
+		if(game.enemyCheckPoint(col, row).equals("ship")) {
 			clickedButton.setStyle("-fx-background-color: red;-fx-border-color: black;");
 		}
 		clickedButton.setDisable(true); // Disable the button so it cannot be clicked again

@@ -135,12 +135,22 @@ public class Server{
 									client2.out.writeObject("begin");
 								}
 							}
-							if(data instanceof Move) {
+							else if(data instanceof Move) {
 								Move newMove = (Move) data;
 								if(!pvp) {
 									moveGenerator(this);
 								}
+								else{
+									pairedClients.get(this).out.writeObject(new Move(newMove));
+								}
 							}
+							else if(data instanceof Grid) {
+								Grid enemyGrid = (Grid) data;
+								if(pvp) {
+									pairedClients.get(this).out.writeObject(enemyGrid);
+								}
+							}
+
 					    	
 					    	}
 					    catch(Exception e) {
