@@ -131,7 +131,8 @@ public class Server{
 									ClientThread client2 = waitingClients.poll();
 									pairedClients.put(client1, client2);
 									pairedClients.put(client2, client1);
-									//startGame(client1, client2);
+									client1.out.writeObject("begin");
+									client2.out.writeObject("begin");
 								}
 							}
 							if(data instanceof Move) {

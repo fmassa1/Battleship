@@ -15,9 +15,9 @@ public class Client extends Thread{
 	ObjectOutputStream out;
 	ObjectInputStream in;
 	
-	private Consumer<Move> callback;
+	private Consumer<Object> callback;
 	
-	Client(Consumer<Move> call){
+	Client(Consumer<Object> call){
 	
 		callback = call;
 	}
@@ -40,9 +40,13 @@ public class Client extends Thread{
 					Move newMove = (Move) data;
 					callback.accept(newMove);
 				}
+				else if(data instanceof String) {
+					callback.accept(data.toString());
+				}
+			}
+			catch(Exception e) {
 
 			}
-			catch(Exception e) {}
 		}
 	
     }

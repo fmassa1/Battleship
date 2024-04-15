@@ -46,8 +46,18 @@ public class GuiClient extends Application{
 	public void start(Stage primaryStage) throws Exception {
 		clientConnection = new Client(data->{
 			Platform.runLater(()->{
-				game.setShot(data.getX(), data.getY());
-				updatePlayerGrid();
+				if(data instanceof Move) {
+					Move nextMove = (Move) data;
+					game.setShot(nextMove.getX(), nextMove.getY());
+					updatePlayerGrid();
+				}
+				else if (data instanceof String) {
+					String word = data.toString();
+					if(word.equals("begin") && game.isOnline()) {
+						primaryStage.setScene(sceneMap.get("game"));
+					}
+				}
+
 			});
 		});
 
