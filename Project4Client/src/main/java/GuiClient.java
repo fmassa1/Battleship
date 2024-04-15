@@ -45,7 +45,9 @@ public class GuiClient extends Application{
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		clientConnection = new Client(data->{
-			Platform.runLater(()->{listItems2.getItems().add(data.toString());
+			Platform.runLater(()->{
+				game.setShot(data.getX(), data.getY());
+				updatePlayerGrid();
 			});
 		});
 
@@ -59,7 +61,7 @@ public class GuiClient extends Application{
 
 
 		b1.setOnAction(e->{primaryStage.setScene(sceneMap.get("game"));});
-		b2.setOnAction(e->{game.setOnline(); primaryStage.setScene(sceneMap.get("game"));});
+		b2.setOnAction(e->{game.setOnline(); clientConnection.send("queue");primaryStage.setScene(sceneMap.get("game"));});
 
 		b4.setOnAction(e->{
 			String selectedShip = shipDropDown.getValue();
@@ -80,6 +82,8 @@ public class GuiClient extends Application{
 				c1.setPromptText("Error, try again");
 			}
 		});
+		b5.setOnAction(e->{hBox.setVisible(false); c1.setVisible(false);title.setText("Your move");});
+
 
 
 		sceneMap = new HashMap<String, Scene>();
@@ -123,22 +127,34 @@ public class GuiClient extends Application{
 	private void enemyButtonClick(int row, int col) {
 		Button clickedButton = enemyGridButtons[row][col];
 		clickedButton.setStyle("-fx-background-color: blue;-fx-border-color: black;");
-		if(game.playerCheckShip(col, row)) {
+		if(game.playerCheckPoint(col, row).equals("ship")) {
 			clickedButton.setStyle("-fx-background-color: red;-fx-border-color: black;");
 		}
 		clickedButton.setDisable(true); // Disable the button so it cannot be clicked again
 		System.out.println("Button clicked at: " + row + ", " + col);
+		clientConnection.send(new Move(row, col));
 		// Add your game logic here
 	}
 	private void updatePlayerGrid() {
 		// Iterate over the ship coordinates and update the corresponding buttons on the grid
 		for (int row = 0; row < 10; row++) {
 			for (int col = 0; col < 10; col++) {
-				if (game.playerCheckShip(col, row)) {
+				if (game.playerCheckPoint(col, row).equals("shot ship")) {
+					playerGridButtons[row][col].setStyle("-fx-background-color: red;");
+					playerGridButtons[row][col].setDisable(true);
+					playerGridButtons[row][col].setText("");
+				}
+				else if (game.playerCheckPoint(col, row).equals("ship")) {
 					playerGridButtons[row][col].setStyle("-fx-background-color: gray;");
 					playerGridButtons[row][col].setDisable(true);
 					playerGridButtons[row][col].setText("");
 				}
+				else if(game.playerCheckPoint(col, row).equals("shot")) {
+					playerGridButtons[row][col].setStyle("-fx-background-color: blue;");
+					playerGridButtons[row][col].setDisable(true);
+					playerGridButtons[row][col].setText("");
+				}
+
 			}
 		}
 	}

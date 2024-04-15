@@ -1,9 +1,10 @@
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.function.Consumer;
 
 import javafx.application.Platform;
@@ -19,8 +20,11 @@ public class Server{
 	ArrayList<ClientThread> clients = new ArrayList<ClientThread>();
 	TheServer server;
 	private Consumer<Serializable> callback;
-	
-	
+	private Queue<ClientThread> waitingClients = new LinkedList<>();
+	private Map<ClientThread, ClientThread> pairedClients = new HashMap<>();
+
+
+
 	Server(Consumer<Serializable> call){
 	
 		callback = call;
@@ -57,7 +61,7 @@ public class Server{
 
 		class ClientThread extends Thread{
 			
-		
+			boolean pvp = false;
 			Socket connection;
 			int count;
 			ObjectInputStream in;
@@ -77,6 +81,13 @@ public class Server{
 					catch(Exception e) {}
 				}
 			}
+			public void moveGenerator(ClientThread x){
+				try {
+					x.out.writeObject(new Move(0, 0));
+				}
+				catch(Exception e) {}
+
+			}
 			
 			public void run(){
 					
@@ -88,14 +99,32 @@ public class Server{
 				catch(Exception e) {
 					System.out.println("Streams not open");
 				}
-				
+
+
 				updateClients("new client on server: client #"+count);
 					
 				 while(true) {
 					    try {
-					    	String data = in.readObject().toString();
-					    	callback.accept("client: " + count + " sent: " + data);
-					    	updateClients("client #"+count+" said: "+data);
+					    	Object data = in.readObject();
+							if(data instanceof String) {
+								if (data.toString().equals("queue")) {
+									waitingClients.add(this);
+									pvp = true;
+								}
+								if (waitingClients.size() >= 2) {
+									ClientThread client1 = waitingClients.poll();
+									ClientThread client2 = waitingClients.poll();
+									pairedClients.put(client1, client2);
+									pairedClients.put(client2, client1);
+									//startGame(client1, client2);
+								}
+							}
+							if(data instanceof Move) {
+								Move newMove = (Move) data;
+								if(!pvp) {
+									moveGenerator(this);
+								}
+							}
 					    	
 					    	}
 					    catch(Exception e) {
@@ -110,9 +139,3 @@ public class Server{
 			
 		}//end of client thread
 }
-
-
-	
-	
-
-	

@@ -6,7 +6,6 @@ public class GridBox {
 
     private boolean ship = false;
     private boolean shot = false;
-    private boolean empty = true;
 
     public GridBox(int x, int y) {
         this.x = x;
@@ -14,10 +13,13 @@ public class GridBox {
     }
     public int getX(){return x;}
     public int getY(){return y;}
-    public void setShip() {ship = true; empty = false;}
-    public boolean hasShip() {return ship;}
-    public void setShot() {shot = true; empty = false;}
-    public boolean hasShot() {return shot;}
+    public void setShip() {ship = true;}
+    public String contains() {
+        if(ship && shot) {return "shot ship";}
+        if(ship) {return "ship";}
+        if(shot) {return "shot";}
+        return "none";
+    }
+    public void setShot() {shot = true;}
 
-    public boolean isEmpty() {return empty;}
 }

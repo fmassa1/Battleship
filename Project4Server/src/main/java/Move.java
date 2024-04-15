@@ -24,6 +24,11 @@ public class Move implements Serializable {
     public void printMove() {
         System.out.println("("+x+","+y+")");
     }
+
+    public int getX() {return x;}
+
+    public int getY() {return y;}
+
     public void setOnline() {ai=false;}
     public boolean isAi() {return ai;}
 }

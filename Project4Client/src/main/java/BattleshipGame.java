@@ -24,13 +24,15 @@ public class BattleshipGame {
         }
         return "none";
     }
-    public boolean playerCheckShip(int x, int y){return player.isShip(x,y);}
-    public boolean enemyCheckShip(int x, int y){return enemy.isShip(x,y);}
+    public String playerCheckPoint(int x, int y){return player.pointStatus(x,y);}
+
+    public String enemyCheckShip(int x, int y){return enemy.pointStatus(x,y);}
     public void setOnline(){online = true;}
 
     public boolean isOnline() {return online;}
 
     public boolean setShipLocation(String ship, String location) {return player.setShipLocations(ship,location);}
+    public void setShot(int x, int y) {player.setShot(x,y);}
 
 
 

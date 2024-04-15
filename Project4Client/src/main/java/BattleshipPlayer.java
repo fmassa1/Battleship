@@ -22,7 +22,7 @@ public class BattleshipPlayer {
         }
         return health;
     }
-    public boolean isShip(int x, int y) {return grid.isShip(x,y);}
+    public String pointStatus(int x, int y) {return grid.contains(x,y);}
 
     public boolean setShipLocations(String ship, String location) {
         int length = 0;
@@ -61,14 +61,14 @@ public class BattleshipPlayer {
         if(y1 == y2) {
             if(x1 > x2) {int temp = x1; x1=x2; x2=temp;}
             for(int i = x1; i <= x2; i++) {
-                if(grid.isShip(i,y1)){return false;}
+                if(grid.contains(i,y1).equals("ship")){return false;}
             }
             for(int i = x1; i <= x2; i++) {grid.setShip(i, y1); curShip.setLocation(new Move(i,y1));}
         }
         else if(x1 == x2) {
             if(y1 > y2) {int temp = y1; y1=y2; y2=temp;}
             for (int i = y1; i <= y2; i++) {
-                if (grid.isShip(x1, i)) {return false;}
+                if (grid.contains(x1, i).equals("ship")) {return false;}
             }
             for (int i = y1; i <= y2; i++) {grid.setShip(x1, i); curShip.setLocation(new Move(x1,i));}
         }
@@ -79,6 +79,10 @@ public class BattleshipPlayer {
             i.printMove();
         }
         return true;
+    }
+
+    public void setShot(int x, int y) {
+        grid.setShot(x, y);
     }
 
 
@@ -94,4 +98,5 @@ public class BattleshipPlayer {
         if (startCol == endCol && Math.abs(startRow - endRow) == length - 1) {return true;}
         return false;
     }
+
 }
