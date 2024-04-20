@@ -15,7 +15,10 @@ public class Ship implements Serializable {
     public Ship(Ship otherShip) {
         this.type = otherShip.type;
         this.health = otherShip.health;
-        this.location = new ArrayList<>(otherShip.location);
+        this.location = new ArrayList<>();
+        for(Move x: otherShip.getLocation()) {
+            this.location.add(new Move(x));
+        }
     }
 
     public void shot() {health--;}

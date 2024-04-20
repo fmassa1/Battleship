@@ -62,14 +62,14 @@ public class BattleshipPlayer{
             for(int i = x1; i <= x2; i++) {
                 if(grid.contains(i,y1).equals("ship")){return false;}
             }
-            for(int i = x1; i <= x2; i++) {grid.setShip(i, y1); curShip.setLocation(new Move(i,y1));}
+            for(int i = x1; i <= x2; i++) {grid.setShip(i, y1); curShip.setLocation(new Move(y1,i));}
         }
         else if(x1 == x2) {
             if(y1 > y2) {int temp = y1; y1=y2; y2=temp;}
             for (int i = y1; i <= y2; i++) {
                 if (grid.contains(x1, i).equals("ship")) {return false;}
             }
-            for (int i = y1; i <= y2; i++) {grid.setShip(x1, i); curShip.setLocation(new Move(x1,i));}
+            for (int i = y1; i <= y2; i++) {grid.setShip(x1, i); curShip.setLocation(new Move(i,x1));}
         }
         playerShips.add(curShip);
         System.out.println(curShip.getType());
@@ -83,20 +83,27 @@ public class BattleshipPlayer{
     public boolean setShot(int x, int y) {
         return grid.setShot(x, y);
     }
-    public void copyShips(ArrayList<Ship> x) {
-        playerShips = x;
+    public void copyShips(ArrayList<Ship> shipsToCopy) {
+        playerShips = new ArrayList<>();
+        for(Ship x : shipsToCopy) {
+            playerShips.add(new Ship(x));
+        }
     }
     public ArrayList<Ship> getShips() {return playerShips;}
 
     public String checkShot(Move target) {
         for(Ship curShip : getShips()) {
-            if(curShip.getLocation().contains(target)) {
-                curShip.shot();
-                if(curShip.destroyed()){return curShip.getType() + " has been sunk!";}
-                return " ship has been hit";
+            for(Move x: curShip.getLocation()) {
+                if(target.equals(x)) {
+                    curShip.shot();
+                    if (curShip.destroyed()) {
+                        return curShip.getType() + " has been sunk!";
+                    }
+                    return " ship has been hit";
+                }
             }
         }
-        return " shot missed";
+        return " shot missed lol";
     }
 
 

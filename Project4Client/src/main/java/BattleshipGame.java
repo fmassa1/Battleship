@@ -17,10 +17,10 @@ public class BattleshipGame {
 
     public String winCheck() {
         if(player.checkHealth() == 0) {
-            return "p2";
+            return "You have lost!";
         }
         if(enemy.checkHealth() == 0) {
-            return "p1";
+            return "Congratulations you have won! ";
         }
         return "none";
     }
@@ -44,7 +44,5 @@ public class BattleshipGame {
     public boolean setShipLocation(String ship, String location) {return player.setShipLocations(ship,location);}
     public boolean setShotPlayer(int x, int y) {return player.setShot(x,y);}
     public void setShotEnemy(int x, int y) {enemy.setShot(x,y);}
-
-
 
 }

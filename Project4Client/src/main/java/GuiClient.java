@@ -26,7 +26,7 @@ public class GuiClient extends Application{
 
 	TextField c1;
 	Text title, turn;
-	Button b1, b2, b3, b4, b5;
+	Button b1, b2, b3, b4, b5, b6;
 	HashMap<String, Scene> sceneMap;
 	VBox clientBox;
 	HBox hBox;
@@ -36,11 +36,11 @@ public class GuiClient extends Application{
 
 	Timeline delay;
 
-	private Button[][] enemyGridButtons = new Button[10][10]; // Grid 1
-	private Button[][] playerGridButtons = new Button[10][10]; // Grid 2
+	private Button[][] enemyGridButtons;
+	private Button[][] playerGridButtons;
 	GridPane player = new GridPane();
 	GridPane enemy = new GridPane();
-	BattleshipGame game = new BattleshipGame();
+	BattleshipGame game;
 	boolean myTurn;
 
 	public static void main(String[] args) {
@@ -60,12 +60,14 @@ public class GuiClient extends Application{
 						title.setText("Opponent has missed");
 					}
 					updatePlayerGrid();
-					delay.play();
+					myTurn = !myTurn;
+					turn.setText("Your turn");
+					winner();
 				}
 				else if (data instanceof String) {
 					String word = data.toString();
 					if(word.equals("begin") && game.isOnline()) {
-						primaryStage.setScene(sceneMap.get("game"));
+						primaryStage.setScene(mainGame());
 					}
 				}
 				else if (data instanceof Grid) {
@@ -93,16 +95,16 @@ public class GuiClient extends Application{
 		b3 = new Button("Rules");
 		b4 = new Button("Set Position");
 		b5 = new Button("Begin Game");
+		b6 = new Button("Back to Menu");
 		turn = new Text("");
 
-		delay = new Timeline(new KeyFrame(Duration.seconds(2), actionEvent -> {
-            myTurn = !myTurn;
-			turn.setText("Your turn");
-		}));
+//		delay = new Timeline(new KeyFrame(Duration.seconds(2), actionEvent -> {
+//
+//		}));
 
 
-		b1.setOnAction(e->{primaryStage.setScene(sceneMap.get("game"));});
-		b2.setOnAction(e->{game.setOnline(); clientConnection.send("queue");primaryStage.setScene(sceneMap.get("queue"));});
+		b1.setOnAction(e->{resetGame();primaryStage.setScene(sceneMap.get("game"));});
+		b2.setOnAction(e->{resetGame();game.setOnline(); clientConnection.send("queue");primaryStage.setScene(queueScreen());});
 
 		b4.setOnAction(e->{
 			String selectedShip = shipDropDown.getValue();
@@ -148,6 +150,9 @@ public class GuiClient extends Application{
 			}
 		});
 
+		b6.setOnAction(e->{clientConnection.send("queue");primaryStage.setScene(createStart());});
+
+
 
 
 		sceneMap = new HashMap<String, Scene>();
@@ -164,24 +169,7 @@ public class GuiClient extends Application{
 			}
 		});
 
-		// Populate the grid with buttons
-		for (int row = 0; row < 10; row++) {
-			for (int col = 0; col < 10; col++) {
-				Button button1 = new Button(Character.toString((char)('A' + row))+(col+1)); // Grid 1
-				Button button2 = new Button(Character.toString((char)('A' + row))+(col+1)); // Grid 2
-				button1.setStyle("-fx-font-size:9;" + "-fx-text-fill: rgba(0, 0, 0, 0.5);");
-				button2.setStyle("-fx-font-size:9;" + "-fx-text-fill: rgba(0, 0, 0, 0.5);");
-				button1.setPrefSize(30, 30);
-				button2.setPrefSize(30, 30);
-				final int r = row;
-				final int c = col;
-				button1.setOnAction(event -> enemyButtonClick(r, c));
- 				enemyGridButtons[row][col] = button1;
-				playerGridButtons[row][col] = button2;
-				enemy.add(button1, col, row);
-				player.add(button2, col, row);
-			}
-		}
+
 
 		primaryStage.setScene(sceneMap.get("start"));
 		primaryStage.setTitle("Battleship");
@@ -198,12 +186,13 @@ public class GuiClient extends Application{
 				clickedButton.setStyle("-fx-background-color: red;-fx-border-color: black;");
 				title.setText(game.enemyMoveChecker(clicked));
 			}
-			else {title.setText("You has missed");}
-			clickedButton.setDisable(true); // Disable the button so it cannot be clicked again
+			else {title.setText("You have missed");}
+			clickedButton.setDisable(true);
 			System.out.println("Button clicked at: " + row + ", " + col);
 			clientConnection.send(new Move(row, col));
 			turn.setText("Opponents turn");
 			myTurn = false;
+			winner();
 		}
 
 	}
@@ -230,6 +219,39 @@ public class GuiClient extends Application{
 			}
 		}
 	}
+	private void winner() {
+		if(!game.winCheck().equals("none")) {
+			myTurn = false;
+			turn.setVisible(false);
+			title.setText(game.winCheck());
+			clientBox.getChildren().add(b6);
+		}
+	}
+	private void generateButtons() {
+		enemyGridButtons = new Button[10][10];
+		playerGridButtons = new Button[10][10];
+		for (int row = 0; row < 10; row++) {
+			for (int col = 0; col < 10; col++) {
+				Button button1 = new Button(Character.toString((char)('A' + row))+(col+1)); // Grid 1
+				Button button2 = new Button(Character.toString((char)('A' + row))+(col+1)); // Grid 2
+				button1.setStyle("-fx-font-size:9;" + "-fx-text-fill: rgba(0, 0, 0, 0.5);");
+				button2.setStyle("-fx-font-size:9;" + "-fx-text-fill: rgba(0, 0, 0, 0.5);");
+				button1.setPrefSize(30, 30);
+				button2.setPrefSize(30, 30);
+				final int r = row;
+				final int c = col;
+				button1.setOnAction(event -> enemyButtonClick(r, c));
+				enemyGridButtons[row][col] = button1;
+				playerGridButtons[row][col] = button2;
+				enemy.add(button1, col, row);
+				player.add(button2, col, row);
+			}
+		}
+	}
+	private void resetGame() {
+		game = new BattleshipGame();
+		generateButtons();
+	}
 	public Scene queueScreen() {
 		title = new Text("Waiting for another player");
 		clientBox = new VBox(20, title);
@@ -253,6 +275,7 @@ public class GuiClient extends Application{
 		return new Scene(borderPane, 400, 300);
 	}
 	public Scene mainGame() {
+
 		title = new Text("Place your ships");
 		c1 = new TextField();
 		c1.setPromptText("Enter ship location, by smaller position to bigger. Example; A1-A5");
