@@ -11,6 +11,10 @@ public class Move implements Serializable {
         this.x = x;
         this.y = y;
     }
+    public Move(Move t){
+        this.x = t.getX();
+        this.y = t.getY();
+    }
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;

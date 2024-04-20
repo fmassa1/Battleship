@@ -3,6 +3,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 
@@ -46,6 +47,10 @@ public class Client extends Thread{
 				else if(data instanceof Grid) {
 					Grid enemyGrid = (Grid) data;
 					callback.accept(enemyGrid);
+				}
+				else if(data instanceof ArrayList) {
+					ArrayList enemyShips = (ArrayList) data;
+					callback.accept(enemyShips);
 				}
 			}
 			catch(Exception e) {

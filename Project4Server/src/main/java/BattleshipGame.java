@@ -33,7 +33,8 @@ public class BattleshipGame {
     public boolean isOnline() {return online;}
 
     public boolean setShipLocation(String ship, String location) {return player.setShipLocations(ship,location);}
-    public void setShot(int x, int y) {player.setShot(x,y);}
+    public void setShotPlayer(int x, int y) {player.setShot(x,y);}
+    public void setShotEnemy(int x, int y) {enemy.setShot(x,y);}
 
 
 

@@ -23,6 +23,9 @@ public class GridBox implements Serializable {
         if(shot) {return "shot";}
         return "none";
     }
-    public void setShot() {shot = true;}
+    public boolean setShot() {
+        shot = true;
+        return ship;
+    }
 
 }

@@ -1,10 +1,10 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class BattleshipPlayer {
-
+public class BattleshipPlayer implements Serializable {
+    private static final long serialVersionUID = 42L;
     ArrayList<Ship> playerShips;
-    HashMap<String, ArrayList<Move>> shipLocations;
     Grid grid;
 
     BattleshipPlayer() {
@@ -84,6 +84,10 @@ public class BattleshipPlayer {
     public void setShot(int x, int y) {
         grid.setShot(x, y);
     }
+    public void copyShips(ArrayList<Ship> x) {
+        playerShips = x;
+    }
+    public ArrayList<Ship> getShips() {return playerShips;}
 
 
     private boolean isValidLocation(String firstSpot, String lastSpot, int length) {
@@ -98,5 +102,6 @@ public class BattleshipPlayer {
         if (startCol == endCol && Math.abs(startRow - endRow) == length - 1) {return true;}
         return false;
     }
+
 
 }

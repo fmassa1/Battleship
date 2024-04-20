@@ -1,5 +1,8 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -17,11 +20,12 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.scene.control.ComboBox;
+import javafx.util.Duration;
 
 public class GuiClient extends Application{
 
 	TextField c1;
-	Text title;
+	Text title, turn;
 	Button b1, b2, b3, b4, b5;
 	HashMap<String, Scene> sceneMap;
 	VBox clientBox;
@@ -30,13 +34,14 @@ public class GuiClient extends Application{
 	BorderPane borderPane;
 	ComboBox<String> shipDropDown;
 
-	ListView<String> listItems2;
+	Timeline delay;
+
 	private Button[][] enemyGridButtons = new Button[10][10]; // Grid 1
 	private Button[][] playerGridButtons = new Button[10][10]; // Grid 2
 	GridPane player = new GridPane();
 	GridPane enemy = new GridPane();
 	BattleshipGame game = new BattleshipGame();
-
+	boolean myTurn;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -48,8 +53,14 @@ public class GuiClient extends Application{
 			Platform.runLater(()->{
 				if(data instanceof Move) {
 					Move nextMove = (Move) data;
-					game.setShot(nextMove.getX(), nextMove.getY());
+					if(game.setShotPlayer(nextMove.getX(), nextMove.getY())) {
+						title.setText(game.playerMoveChecker(nextMove));
+					}
+					else {
+						title.setText("Opponent has missed");
+					}
 					updatePlayerGrid();
+					delay.play();
 				}
 				else if (data instanceof String) {
 					String word = data.toString();
@@ -61,6 +72,14 @@ public class GuiClient extends Application{
 					Grid enemyGrid = (Grid) data;
 					if(game.isOnline()) {
 						game.enemy.setBoard(enemyGrid);
+						myTurn = true;
+						turn.setText("Your turn");
+					}
+				}
+				else if (data instanceof ArrayList) {
+					ArrayList enemyShips = (ArrayList) data;
+					if(game.isOnline()) {
+						game.enemy.copyShips(enemyShips);
 					}
 				}
 
@@ -74,6 +93,12 @@ public class GuiClient extends Application{
 		b3 = new Button("Rules");
 		b4 = new Button("Set Position");
 		b5 = new Button("Begin Game");
+		turn = new Text("");
+
+		delay = new Timeline(new KeyFrame(Duration.seconds(2), actionEvent -> {
+            myTurn = !myTurn;
+			turn.setText("Your turn");
+		}));
 
 
 		b1.setOnAction(e->{primaryStage.setScene(sceneMap.get("game"));});
@@ -102,12 +127,24 @@ public class GuiClient extends Application{
 			}
 		});
 		b5.setOnAction(e->{
-			hBox.setVisible(false);
-			c1.setVisible(false);
-			title.setText("Your move");
+			clientBox.getChildren().clear();
+			clientBox.getChildren().add(turn);
+			clientBox.getChildren().add(title);
+			title.setText("");
+			turn.setText("Your move");
 			if(game.isOnline()) {
 				Grid sending = new Grid(game.getPlayerGrid());
 				clientConnection.send(sending);
+				ArrayList<Ship> ships = new ArrayList<>();
+				for(Ship x: game.player.getShips()) {
+					ships.add(new Ship(x));
+				}
+				clientConnection.send(ships);
+				turn.setText("Opponent's turn");
+				myTurn = false;
+			}
+			else {
+				myTurn = true;
 			}
 		});
 
@@ -153,15 +190,22 @@ public class GuiClient extends Application{
 	}
 
 	private void enemyButtonClick(int row, int col) {
-		Button clickedButton = enemyGridButtons[row][col];
-		clickedButton.setStyle("-fx-background-color: blue;-fx-border-color: black;");
-		if(game.enemyCheckPoint(col, row).equals("ship")) {
-			clickedButton.setStyle("-fx-background-color: red;-fx-border-color: black;");
+		if(myTurn) {
+			Button clickedButton = enemyGridButtons[row][col];
+			Move clicked = new Move(row, col);
+			clickedButton.setStyle("-fx-background-color: blue;-fx-border-color: black;");
+			if (game.enemyCheckPoint(col, row).equals("ship")) {
+				clickedButton.setStyle("-fx-background-color: red;-fx-border-color: black;");
+				title.setText(game.enemyMoveChecker(clicked));
+			}
+			else {title.setText("You has missed");}
+			clickedButton.setDisable(true); // Disable the button so it cannot be clicked again
+			System.out.println("Button clicked at: " + row + ", " + col);
+			clientConnection.send(new Move(row, col));
+			turn.setText("Opponents turn");
+			myTurn = false;
 		}
-		clickedButton.setDisable(true); // Disable the button so it cannot be clicked again
-		System.out.println("Button clicked at: " + row + ", " + col);
-		clientConnection.send(new Move(row, col));
-		// Add your game logic here
+
 	}
 	private void updatePlayerGrid() {
 		// Iterate over the ship coordinates and update the corresponding buttons on the grid

@@ -8,7 +8,7 @@ public class BattleshipGame {
     BattleshipPlayer player;
     BattleshipPlayer enemy;
 
-    boolean online = false;
+    private boolean online = false;
 
     public BattleshipGame() {
         player = new BattleshipPlayer();
@@ -24,6 +24,15 @@ public class BattleshipGame {
         }
         return "none";
     }
+
+    public String playerMoveChecker(Move x) {
+
+        return "Your " + player.checkShot(x);
+    }
+    public String enemyMoveChecker(Move x) {
+        return "Opponent's " + enemy.checkShot(x);
+    }
+
     public String playerCheckPoint(int x, int y){return player.pointStatus(x,y);}
     public Grid getPlayerGrid() {return player.getGrid();}
 
@@ -33,7 +42,8 @@ public class BattleshipGame {
     public boolean isOnline() {return online;}
 
     public boolean setShipLocation(String ship, String location) {return player.setShipLocations(ship,location);}
-    public void setShot(int x, int y) {player.setShot(x,y);}
+    public boolean setShotPlayer(int x, int y) {return player.setShot(x,y);}
+    public void setShotEnemy(int x, int y) {enemy.setShot(x,y);}
 
 
 

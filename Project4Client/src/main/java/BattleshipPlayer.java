@@ -1,10 +1,9 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class BattleshipPlayer {
-
-    ArrayList<Ship> playerShips;
-    HashMap<String, ArrayList<Move>> shipLocations;
+public class BattleshipPlayer{
+    private ArrayList<Ship> playerShips;
     Grid grid;
 
     BattleshipPlayer() {
@@ -81,8 +80,23 @@ public class BattleshipPlayer {
         return true;
     }
 
-    public void setShot(int x, int y) {
-        grid.setShot(x, y);
+    public boolean setShot(int x, int y) {
+        return grid.setShot(x, y);
+    }
+    public void copyShips(ArrayList<Ship> x) {
+        playerShips = x;
+    }
+    public ArrayList<Ship> getShips() {return playerShips;}
+
+    public String checkShot(Move target) {
+        for(Ship curShip : getShips()) {
+            if(curShip.getLocation().contains(target)) {
+                curShip.shot();
+                if(curShip.destroyed()){return curShip.getType() + " has been sunk!";}
+                return " ship has been hit";
+            }
+        }
+        return " shot missed";
     }
 
 
@@ -98,5 +112,6 @@ public class BattleshipPlayer {
         if (startCol == endCol && Math.abs(startRow - endRow) == length - 1) {return true;}
         return false;
     }
+
 
 }

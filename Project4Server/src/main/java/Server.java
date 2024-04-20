@@ -73,17 +73,6 @@ public class Server{
 				this.connection = s;
 				this.count = count;	
 			}
-			
-			public void updateClients(String message) {
-				for(int i = 0; i < clients.size(); i++) {
-					ClientThread t = clients.get(i);
-					try {
-					 t.out.writeObject(message);
-					}
-					catch(Exception e) {}
-				}
-			}
-
 
 			public void moveGenerator(ClientThread c){
 				try {
@@ -114,14 +103,11 @@ public class Server{
 				catch(Exception e) {
 					System.out.println("Streams not open");
 				}
-
-
-				updateClients("new client on server: client #"+count);
 					
 				 while(true) {
 					    try {
-					    	Object data = in.readObject();
-							if(data instanceof String) {
+							Object data = in.readObject();
+							if (data instanceof String) {
 								if (data.toString().equals("queue")) {
 									waitingClients.add(this);
 									pvp = true;
@@ -134,28 +120,33 @@ public class Server{
 									client1.out.writeObject("begin");
 									client2.out.writeObject("begin");
 								}
-							}
-							else if(data instanceof Move) {
-								Move newMove = (Move) data;
-								if(!pvp) {
-									moveGenerator(this);
+								if (data.toString().equals("ready")) {
+									waitingClients.add(this);
+									pvp = true;
 								}
-								else{
+							} else if (data instanceof Move) {
+								Move newMove = (Move) data;
+								if (!pvp) {
+									moveGenerator(this);
+								} else {
 									pairedClients.get(this).out.writeObject(new Move(newMove));
 								}
-							}
-							else if(data instanceof Grid) {
+							} else if (data instanceof Grid) {
 								Grid enemyGrid = (Grid) data;
-								if(pvp) {
+								if (pvp) {
 									pairedClients.get(this).out.writeObject(enemyGrid);
 								}
-							}
+							} else if (data instanceof ArrayList) {
+								ArrayList ships = (ArrayList) data;
+								if (pvp) {
+									pairedClients.get(this).out.writeObject(ships);
+								}
 
-					    	
-					    	}
+
+							}
+						}
 					    catch(Exception e) {
 					    	callback.accept("OOOOPPs...Something wrong with the socket from client: " + count + "....closing down!");
-					    	updateClients("Client #"+count+" has left the server!");
 					    	clients.remove(this);
 					    	break;
 					    }

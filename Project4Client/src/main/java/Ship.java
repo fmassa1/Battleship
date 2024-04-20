@@ -1,6 +1,8 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Ship {
+public class Ship implements Serializable {
+    private static final long serialVersionUID = 42L;
     String type;
     int health;
     ArrayList<Move> location;
@@ -9,6 +11,11 @@ public class Ship {
         this.type = type;
         this.health = health;
         location = new ArrayList<>();
+    }
+    public Ship(Ship otherShip) {
+        this.type = otherShip.type;
+        this.health = otherShip.health;
+        this.location = new ArrayList<>(otherShip.location);
     }
 
     public void shot() {health--;}

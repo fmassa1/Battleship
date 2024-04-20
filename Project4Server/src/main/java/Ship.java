@@ -1,6 +1,8 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Ship {
+public class Ship implements Serializable {
+    private static final long serialVersionUID = 42L;
     String type;
     int health;
     ArrayList<Move> location;
