@@ -150,7 +150,7 @@ public class GuiClient extends Application{
 			}
 		});
 
-		b6.setOnAction(e->{clientConnection.send("queue");primaryStage.setScene(createStart());});
+		b6.setOnAction(e->{clientConnection.send("dequeue");primaryStage.setScene(createStart());});
 
 
 
@@ -279,6 +279,7 @@ public class GuiClient extends Application{
 		title = new Text("Place your ships");
 		c1 = new TextField();
 		c1.setPromptText("Enter ship location, by smaller position to bigger. Example; A1-A5");
+		b4.setDisable(false);
 		shipDropDown = new ComboBox<>();
 		shipDropDown.getItems().add("Carrier (length 5)");
 		shipDropDown.getItems().add("Battleship (length 4)");

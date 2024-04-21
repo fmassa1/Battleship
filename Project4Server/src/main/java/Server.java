@@ -111,18 +111,22 @@ public class Server{
 								if (data.toString().equals("queue")) {
 									waitingClients.add(this);
 									pvp = true;
+
+									if (waitingClients.size() >= 2) {
+										ClientThread client1 = waitingClients.poll();
+										ClientThread client2 = waitingClients.poll();
+										pairedClients.put(client1, client2);
+										pairedClients.put(client2, client1);
+										client1.out.writeObject("begin");
+										client2.out.writeObject("begin");
+									}
 								}
-								if (waitingClients.size() >= 2) {
-									ClientThread client1 = waitingClients.poll();
-									ClientThread client2 = waitingClients.poll();
-									pairedClients.put(client1, client2);
-									pairedClients.put(client2, client1);
-									client1.out.writeObject("begin");
-									client2.out.writeObject("begin");
-								}
-								if (data.toString().equals("ready")) {
-									waitingClients.add(this);
-									pvp = true;
+								else if (data.toString().equals("dequeue")) {
+									if(pairedClients.containsKey(this)) {
+										ClientThread temp = pairedClients.get(this);
+										pairedClients.remove(temp);
+										pairedClients.remove(this);
+									}
 								}
 							} else if (data instanceof Move) {
 								Move newMove = (Move) data;
