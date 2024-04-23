@@ -5,6 +5,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -26,7 +27,7 @@ public class GuiClient extends Application{
 
 	TextField c1;
 	Text title, turn;
-	Button b1, b2, b3, b4, b5, b6;
+	Button b1, b2, b3, b4, b5, b6, b7;
 	HashMap<String, Scene> sceneMap;
 	VBox clientBox;
 	HBox hBox;
@@ -96,6 +97,7 @@ public class GuiClient extends Application{
 		b4 = new Button("Set Position");
 		b5 = new Button("Begin Game");
 		b6 = new Button("Back to Menu");
+		b7 = new Button("Random");
 		turn = new Text("");
 
 //		delay = new Timeline(new KeyFrame(Duration.seconds(2), actionEvent -> {
@@ -103,7 +105,7 @@ public class GuiClient extends Application{
 //		}));
 
 
-		b1.setOnAction(e->{resetGame();primaryStage.setScene(mainGame());});
+		b1.setOnAction(e->{resetGame();primaryStage.setScene(mainGame()); game.generateEnemyLocation();});
 		b2.setOnAction(e->{resetGame();game.setOnline(); clientConnection.send("queue");primaryStage.setScene(queueScreen());});
 
 		b4.setOnAction(e->{
@@ -133,8 +135,9 @@ public class GuiClient extends Application{
 			clientBox.getChildren().add(turn);
 			clientBox.getChildren().add(title);
 			title.setText("");
-			turn.setText("Your move");
+			turn.setText("Your turn");
 			if(game.isOnline()) {
+				turn.setText("Waiting for opponent");
 				Grid sending = new Grid(game.getPlayerGrid());
 				clientConnection.send(sending);
 				ArrayList<Ship> ships = new ArrayList<>();
@@ -151,6 +154,23 @@ public class GuiClient extends Application{
 		});
 
 		b6.setOnAction(e->{clientConnection.send("dequeue");primaryStage.setScene(createStart());});
+
+		b7.setOnAction(e->{
+			String selectedShip = shipDropDown.getValue();
+			if (selectedShip != null) {
+				game.playerRandom(selectedShip);
+				shipDropDown.getItems().remove(selectedShip);
+				updatePlayerGrid();
+				c1.clear();
+				if(shipDropDown.getItems().isEmpty()) {
+					hBox.getChildren().add(b5);
+					b4.setDisable(true);
+					b7.setDisable(true);
+					c1.setDisable(true);
+					shipDropDown.setDisable(true);
+				}
+			}
+		});
 
 		for (int row = 0; row < 10; row++) {
 			for (int col = 0; col < 10; col++) {
@@ -235,7 +255,7 @@ public class GuiClient extends Application{
 	private void winner() {
 		if(!game.winCheck().equals("none")) {
 			myTurn = false;
-			turn.setVisible(false);
+			turn.setText("");
 			title.setText(game.winCheck());
 			clientBox.getChildren().add(b6);
 		}
@@ -284,13 +304,14 @@ public class GuiClient extends Application{
 		c1 = new TextField();
 		c1.setPromptText("Enter ship location, by smaller position to bigger. Example; A1-A5");
 		b4.setDisable(false);
+		b7.setDisable(false);
 		shipDropDown = new ComboBox<>();
 		shipDropDown.getItems().add("Carrier (length 5)");
 		shipDropDown.getItems().add("Battleship (length 4)");
 		shipDropDown.getItems().add("Cruiser (length 3)");
 		shipDropDown.getItems().add("Submarine (length 3)");
 		shipDropDown.getItems().add("Destroyer (length 2)");
-		hBox = new HBox(shipDropDown, b4);
+		hBox = new HBox(shipDropDown, b4, b7);
 		hBox.setAlignment(Pos.CENTER);
 		clientBox = new VBox(10, title, c1, hBox);
 		clientBox.setAlignment(Pos.CENTER);

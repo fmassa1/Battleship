@@ -24,6 +24,37 @@ public class BattleshipGame {
         }
         return "none";
     }
+    public void generateEnemyLocation() {
+        String[] shipTypes = {"Destroyer", "Cruiser", "Submarine", "Battleship", "Carrier"};
+        int[] shipLengths = {2, 3, 3, 4, 5};
+
+        for (int i = 0; i < shipTypes.length; i++) {
+            enemy.randomShipLocation(shipTypes[i], shipLengths[i]);
+        }
+    }
+    public void playerRandom(String ship) {
+        int length = 0;
+        String name = "";
+        if (ship.startsWith("Destroyer")) {
+            length = 2;
+            name = "Destroyer";
+        } else if (ship.startsWith("Cruiser")) {
+            length = 3;
+            name = "Cruiser";
+        }
+        else if (ship.startsWith("Submarine")) {
+            length = 3;
+            name = "Submarine";
+        }
+        else if (ship.startsWith("Battleship")) {
+            length = 4;
+            name = "Battleship";
+        } else if (ship.startsWith("Carrier")) {
+            length = 5;
+            name = "Carrier";
+        }
+        player.randomShipLocation(name, length);
+    }
 
     public String playerMoveChecker(Move x) {
 

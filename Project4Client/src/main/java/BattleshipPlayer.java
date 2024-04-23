@@ -1,6 +1,7 @@
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 public class BattleshipPlayer{
     private ArrayList<Ship> playerShips;
@@ -104,6 +105,23 @@ public class BattleshipPlayer{
             }
         }
         return " shot missed lol";
+    }
+    public void randomShipLocation(String type, int hp) {
+        Random rand = new Random();
+        boolean placed = false;
+        while (!placed) {
+            int x1 = rand.nextInt(10);
+            int y1 = rand.nextInt(10);
+            boolean isHorizontal = rand.nextBoolean();
+            int x2 = isHorizontal ? x1 + hp - 1 : x1;
+            int y2 = isHorizontal ? y1 : y1 + hp - 1;
+
+            String firstSpot = (char)('A' + y1) + Integer.toString(x1 + 1);
+            String lastSpot = (char)('A' + y2) + Integer.toString(x2 + 1);
+            if (setShipLocations(type, firstSpot + "-" + lastSpot)) {
+                placed = true;
+            }
+        }
     }
 
 
