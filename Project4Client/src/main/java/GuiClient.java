@@ -36,8 +36,8 @@ public class GuiClient extends Application{
 
 	Timeline delay;
 
-	private Button[][] enemyGridButtons;
-	private Button[][] playerGridButtons;
+	private Button[][] enemyGridButtons = new Button[10][10];;
+	private Button[][] playerGridButtons = new Button[10][10];;
 	GridPane player = new GridPane();
 	GridPane enemy = new GridPane();
 	BattleshipGame game;
@@ -103,7 +103,7 @@ public class GuiClient extends Application{
 //		}));
 
 
-		b1.setOnAction(e->{resetGame();primaryStage.setScene(sceneMap.get("game"));});
+		b1.setOnAction(e->{resetGame();primaryStage.setScene(mainGame());});
 		b2.setOnAction(e->{resetGame();game.setOnline(); clientConnection.send("queue");primaryStage.setScene(queueScreen());});
 
 		b4.setOnAction(e->{
@@ -152,7 +152,23 @@ public class GuiClient extends Application{
 
 		b6.setOnAction(e->{clientConnection.send("dequeue");primaryStage.setScene(createStart());});
 
-
+		for (int row = 0; row < 10; row++) {
+			for (int col = 0; col < 10; col++) {
+				Button button1 = new Button(Character.toString((char)('A' + row))+(col+1)); // Grid 1
+				Button button2 = new Button(Character.toString((char)('A' + row))+(col+1)); // Grid 2
+				button1.setStyle("-fx-font-size:9;" + "-fx-text-fill: rgba(0, 0, 0, 0.5);");
+				button2.setStyle("-fx-font-size:9;" + "-fx-text-fill: rgba(0, 0, 0, 0.5);");
+				button1.setPrefSize(30, 30);
+				button2.setPrefSize(30, 30);
+				final int r = row;
+				final int c = col;
+				button1.setOnAction(event -> enemyButtonClick(r, c));
+				enemyGridButtons[row][col] = button1;
+				playerGridButtons[row][col] = button2;
+				enemy.add(button1, col, row);
+				player.add(button2, col, row);
+			}
+		}
 
 
 		sceneMap = new HashMap<String, Scene>();
@@ -181,9 +197,9 @@ public class GuiClient extends Application{
 		if(myTurn) {
 			Button clickedButton = enemyGridButtons[row][col];
 			Move clicked = new Move(row, col);
-			clickedButton.setStyle("-fx-background-color: blue;-fx-border-color: black;");
+			clickedButton.setStyle("-fx-background-color: blue;-fx-border-color: black;-fx-font-size:9;");
 			if (game.enemyCheckPoint(col, row).equals("ship")) {
-				clickedButton.setStyle("-fx-background-color: red;-fx-border-color: black;");
+				clickedButton.setStyle("-fx-background-color: red;-fx-border-color: black;-fx-font-size:9;");
 				title.setText(game.enemyMoveChecker(clicked));
 			}
 			else {title.setText("You have missed");}
@@ -201,19 +217,16 @@ public class GuiClient extends Application{
 		for (int row = 0; row < 10; row++) {
 			for (int col = 0; col < 10; col++) {
 				if (game.playerCheckPoint(col, row).equals("shot ship")) {
-					playerGridButtons[row][col].setStyle("-fx-background-color: red;");
+					playerGridButtons[row][col].setStyle("-fx-background-color: red;"+"-fx-font-size:9;");
 					playerGridButtons[row][col].setDisable(true);
-					playerGridButtons[row][col].setText("");
 				}
 				else if (game.playerCheckPoint(col, row).equals("ship")) {
-					playerGridButtons[row][col].setStyle("-fx-background-color: gray;");
+					playerGridButtons[row][col].setStyle("-fx-background-color: gray;"+"-fx-font-size:9;");
 					playerGridButtons[row][col].setDisable(true);
-					playerGridButtons[row][col].setText("");
 				}
 				else if(game.playerCheckPoint(col, row).equals("shot")) {
-					playerGridButtons[row][col].setStyle("-fx-background-color: blue;");
+					playerGridButtons[row][col].setStyle("-fx-background-color: blue;"+"-fx-font-size:9;");
 					playerGridButtons[row][col].setDisable(true);
-					playerGridButtons[row][col].setText("");
 				}
 
 			}
@@ -227,30 +240,21 @@ public class GuiClient extends Application{
 			clientBox.getChildren().add(b6);
 		}
 	}
-	private void generateButtons() {
-		enemyGridButtons = new Button[10][10];
-		playerGridButtons = new Button[10][10];
+	public void resetButtons() {
 		for (int row = 0; row < 10; row++) {
 			for (int col = 0; col < 10; col++) {
-				Button button1 = new Button(Character.toString((char)('A' + row))+(col+1)); // Grid 1
-				Button button2 = new Button(Character.toString((char)('A' + row))+(col+1)); // Grid 2
+				Button button1 = enemyGridButtons[row][col];
+				Button button2 = playerGridButtons[row][col];
 				button1.setStyle("-fx-font-size:9;" + "-fx-text-fill: rgba(0, 0, 0, 0.5);");
 				button2.setStyle("-fx-font-size:9;" + "-fx-text-fill: rgba(0, 0, 0, 0.5);");
-				button1.setPrefSize(30, 30);
-				button2.setPrefSize(30, 30);
-				final int r = row;
-				final int c = col;
-				button1.setOnAction(event -> enemyButtonClick(r, c));
-				enemyGridButtons[row][col] = button1;
-				playerGridButtons[row][col] = button2;
-				enemy.add(button1, col, row);
-				player.add(button2, col, row);
+				button1.setDisable(false);
+				button2.setDisable(false);
 			}
 		}
 	}
 	private void resetGame() {
 		game = new BattleshipGame();
-		generateButtons();
+		resetButtons();
 	}
 	public Scene queueScreen() {
 		title = new Text("Waiting for another player");

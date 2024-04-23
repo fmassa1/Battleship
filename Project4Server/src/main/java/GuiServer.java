@@ -21,7 +21,7 @@ public class GuiServer extends Application{
 	HashMap<String, Scene> sceneMap;
 	Server serverConnection;
 	
-	ListView<String> listItems, listItems2;
+	ListView<String> listItems;
 	
 	
 	public static void main(String[] args) {
@@ -66,9 +66,5 @@ public class GuiServer extends Application{
 		pane.setCenter(listItems);
 		pane.setStyle("-fx-font-family: 'serif'");
 		return new Scene(pane, 500, 400);
-		
-		
 	}
-
-
 }
