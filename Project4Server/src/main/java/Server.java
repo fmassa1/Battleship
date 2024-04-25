@@ -145,8 +145,15 @@ public class Server{
 								if (pvp) {
 									pairedClients.get(this).out.writeObject(ships);
 								}
-
-
+							} else if (data instanceof Message) {
+								Message mess = (Message) data;
+								if (pvp) {
+									pairedClients.get(this).out.writeObject(mess);
+								}
+								else {
+									mess.getAI();
+									this.out.writeObject(mess);
+								}
 							}
 						}
 					    catch(Exception e) {

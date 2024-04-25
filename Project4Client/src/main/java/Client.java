@@ -52,6 +52,10 @@ public class Client extends Thread{
 					ArrayList enemyShips = (ArrayList) data;
 					callback.accept(enemyShips);
 				}
+				else if(data instanceof Message) {
+					Message mess = (Message) data;
+					callback.accept(mess);
+				}
 			}
 			catch(Exception e) {
 

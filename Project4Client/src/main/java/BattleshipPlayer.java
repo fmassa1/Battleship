@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class BattleshipPlayer{
     private ArrayList<Ship> playerShips;
-    Grid grid;
+    private Grid grid;
 
     BattleshipPlayer() {
         grid = new Grid();

@@ -5,5 +5,6 @@ BattleshipPlayer.class
 GuiClient.class
 Grid.class
 GridBox.class
+Message.class
 Move.class
 GuiClient$1.class

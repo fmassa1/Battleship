@@ -17,25 +17,28 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.scene.control.ComboBox;
 import javafx.util.Duration;
+import javafx.scene.text.Font;
+
 
 public class GuiClient extends Application{
 
-	TextField c1;
-	Text title, turn;
-	Button b1, b2, b3, b4, b5, b6, b7;
+	TextField c1, c2;
+	Text title, turn, opMove;
+	Button b1, b2, b3, b4, b5, b6, b7, b8;
 	HashMap<String, Scene> sceneMap;
-	VBox clientBox;
-	HBox hBox;
+	VBox clientBox, chatBox, optionBox;
+	HBox hBox, hBox2;
 	Client clientConnection;
 	BorderPane borderPane;
 	ComboBox<String> shipDropDown;
+	ListView<String> chat;
 
-	Timeline delay;
 
 	private Button[][] enemyGridButtons = new Button[10][10];;
 	private Button[][] playerGridButtons = new Button[10][10];;
@@ -55,10 +58,10 @@ public class GuiClient extends Application{
 				if(data instanceof Move) {
 					Move nextMove = (Move) data;
 					if(game.setShotPlayer(nextMove.getX(), nextMove.getY())) {
-						title.setText(game.playerMoveChecker(nextMove));
+						opMove.setText(game.playerMoveChecker(nextMove));
 					}
 					else {
-						title.setText("Opponent has missed");
+						opMove.setText("Opponent has missed");
 					}
 					updatePlayerGrid();
 					myTurn = !myTurn;
@@ -85,12 +88,20 @@ public class GuiClient extends Application{
 						game.enemy.copyShips(enemyShips);
 					}
 				}
+				else if (data instanceof Message) {
+					Message mess = (Message) data;
+					if(game.isOnline()) {
+						chat.getItems().add("Enemy: " + mess.getMessage());
+					}
+				}
 
 			});
 		});
 
 		clientConnection.start();
-
+		chat = new ListView<>();
+		chat.setPrefHeight(200);
+		chat.setPrefWidth(200);
 		b1 = new Button("Play AI");
 		b2 = new Button("Play Person");
 		b3 = new Button("Rules");
@@ -98,11 +109,9 @@ public class GuiClient extends Application{
 		b5 = new Button("Begin Game");
 		b6 = new Button("Back to Menu");
 		b7 = new Button("Random");
+		b8 = new Button("Send Message");
 		turn = new Text("");
-
-//		delay = new Timeline(new KeyFrame(Duration.seconds(2), actionEvent -> {
-//
-//		}));
+		opMove = new Text("");
 
 
 		b1.setOnAction(e->{resetGame();primaryStage.setScene(mainGame()); game.generateEnemyLocation();});
@@ -131,9 +140,10 @@ public class GuiClient extends Application{
 			}
 		});
 		b5.setOnAction(e->{
-			clientBox.getChildren().clear();
-			clientBox.getChildren().add(turn);
-			clientBox.getChildren().add(title);
+			optionBox.getChildren().clear();
+			optionBox.getChildren().add(opMove);
+			optionBox.getChildren().add(turn);
+			optionBox.getChildren().add(title);
 			title.setText("");
 			turn.setText("Your turn");
 			if(game.isOnline()) {
@@ -153,7 +163,7 @@ public class GuiClient extends Application{
 			}
 		});
 
-		b6.setOnAction(e->{clientConnection.send("dequeue");primaryStage.setScene(createStart());});
+		b6.setOnAction(e->{clientConnection.send("dequeue");primaryStage.setScene(createStart()); chat.getItems().clear();});
 
 		b7.setOnAction(e->{
 			String selectedShip = shipDropDown.getValue();
@@ -170,6 +180,13 @@ public class GuiClient extends Application{
 					shipDropDown.setDisable(true);
 				}
 			}
+		});
+
+		b8.setOnAction(e->{
+			Message message = new Message(c2.getText());
+			chat.getItems().add("You: " + message.getMessage());
+			clientConnection.send(message);
+			c2.clear();
 		});
 
 		for (int row = 0; row < 10; row++) {
@@ -255,9 +272,10 @@ public class GuiClient extends Application{
 	private void winner() {
 		if(!game.winCheck().equals("none")) {
 			myTurn = false;
-			turn.setText("");
-			title.setText(game.winCheck());
-			clientBox.getChildren().add(b6);
+			title.setText("");
+			opMove.setText("");
+			turn.setText(game.winCheck());
+			optionBox.getChildren().add(b6);
 		}
 	}
 	public void resetButtons() {
@@ -299,10 +317,15 @@ public class GuiClient extends Application{
 		return new Scene(borderPane, 400, 300);
 	}
 	public Scene mainGame() {
-
+		Text opBoard = new Text("Opponents Board");
+		Text playerBoard = new Text("Your Board");
+		opBoard.setFont(Font.font("Arial", FontWeight.BOLD, 20)); //
+		playerBoard.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		title = new Text("Place your ships");
 		c1 = new TextField();
 		c1.setPromptText("Enter ship location, by smaller position to bigger. Example; A1-A5");
+		c2 = new TextField();
+		c2.setPromptText("Message to opponent");
 		b4.setDisable(false);
 		b7.setDisable(false);
 		shipDropDown = new ComboBox<>();
@@ -311,20 +334,30 @@ public class GuiClient extends Application{
 		shipDropDown.getItems().add("Cruiser (length 3)");
 		shipDropDown.getItems().add("Submarine (length 3)");
 		shipDropDown.getItems().add("Destroyer (length 2)");
-		hBox = new HBox(shipDropDown, b4, b7);
+
+		hBox = new HBox(10, shipDropDown, b4, b7);
 		hBox.setAlignment(Pos.CENTER);
-		clientBox = new VBox(10, title, c1, hBox);
+
+		optionBox = new VBox(10, title, c1, hBox);
+		optionBox.setAlignment(Pos.CENTER);
+		optionBox.setStyle("-fx-background-color: #E5E1DA;-fx-background-radius: 15; -fx-padding: 10px;");
+
+		clientBox = new VBox(10, opBoard, enemy, optionBox, player, playerBoard);
 		clientBox.setAlignment(Pos.CENTER);
+		clientBox.setStyle("-fx-background-color: #FBF9F1;-fx-background-radius: 25; -fx-padding: 10px;");
+
+		chatBox = new VBox(10, chat, c2, b8);
+		chatBox.setAlignment(Pos.CENTER);
+		chatBox.setStyle("-fx-background-color: #AAD7D9;-fx-background-radius: 25; -fx-padding: 10px;");
 
 		borderPane = new BorderPane();
 		borderPane.setPadding(new Insets(10));
-		borderPane.setTop(enemy);
 		borderPane.setCenter(clientBox);
-		borderPane.setBottom(player);
+		borderPane.setRight(chatBox);
+		borderPane.setStyle("-fx-background-color: #92C7CF;-fx-padding: 10px;");
 		enemy.setAlignment(Pos.CENTER);
-
 		player.setAlignment(Pos.CENTER);
-		return  new Scene(borderPane, 600, 700);
+		return  new Scene(borderPane, 800, 700);
 	}
 
 }

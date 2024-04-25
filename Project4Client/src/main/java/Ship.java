@@ -3,9 +3,9 @@ import java.util.ArrayList;
 
 public class Ship implements Serializable {
     private static final long serialVersionUID = 42L;
-    String type;
-    int health;
-    ArrayList<Move> location;
+    private String type;
+    private int health;
+    private ArrayList<Move> location;
 
     Ship(String type, int health) {
         this.type = type;
