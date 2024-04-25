@@ -150,10 +150,6 @@ public class Server{
 								if (pvp) {
 									pairedClients.get(this).out.writeObject(mess);
 								}
-								else {
-									mess.getAI();
-									this.out.writeObject(mess);
-								}
 							}
 						}
 					    catch(Exception e) {

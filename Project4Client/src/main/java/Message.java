@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Random;
 
 
@@ -12,6 +13,34 @@ public class Message implements Serializable {
     }
     //checks if message has bad words and changes it if it does.
     private String checkIfAppropriate(String message) {
+        String[] positivePhrases = {
+                "You're amazing!",
+                "You can do it!",
+                "Believe in yourself!",
+                "You're capable of great things!",
+                "Keep up the good work!",
+                "You're doing fantastic!",
+                "You're making progress!",
+                "You're on the right track!",
+                "You've got this!",
+                "You're a star!",
+                "You're an inspiration!",
+                "You're unstoppable!",
+                "You're making a difference!",
+                "You're one in a million!",
+                "You're a winner!",
+                "You're a champion!",
+                "You're a shining light!",
+                "You're full of potential!",
+                "You're a rockstar!",
+                "You're awesome!"
+        };
+        if(message.contains("shit") || message.contains("ass") || message.contains("damn") || message.contains("dumb") ||
+                message.contains("fuck") || message.contains("suck") || message.contains("bad") || message.contains("butt") ||
+                message.contains("stupid") || message.contains("idiot") || message.contains("poop") || message.contains("dick") ) {
+            Random random = new Random();
+            return positivePhrases[random.nextInt(positivePhrases.length)];
+        }
         return message;
     }
     //sends a chat to players playing AI
@@ -39,7 +68,7 @@ public class Message implements Serializable {
                 "You'll regret challenging me!"
         };
         Random random = new Random();
-        message = competitiveMessages[random.nextInt(competitiveMessages.length)];
+        this.message = competitiveMessages[random.nextInt(competitiveMessages.length)];
     }
     public String getMessage() {
         return message;

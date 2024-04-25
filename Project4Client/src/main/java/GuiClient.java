@@ -101,7 +101,7 @@ public class GuiClient extends Application{
 		clientConnection.start();
 		chat = new ListView<>();
 		chat.setPrefHeight(200);
-		chat.setPrefWidth(200);
+		chat.setPrefWidth(300);
 		b1 = new Button("Play AI");
 		b2 = new Button("Play Person");
 		b3 = new Button("Rules");
@@ -185,7 +185,13 @@ public class GuiClient extends Application{
 		b8.setOnAction(e->{
 			Message message = new Message(c2.getText());
 			chat.getItems().add("You: " + message.getMessage());
-			clientConnection.send(message);
+			if(game.isOnline()) {
+				clientConnection.send(message);
+			}
+			else {
+				message.getAI();
+				chat.getItems().add("Enemy: " + message.getMessage());
+			}
 			c2.clear();
 		});
 
