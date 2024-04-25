@@ -59,8 +59,6 @@ public class BattleshipPlayer{
         int y2 = lastSpot.charAt(0) - 'A';
         int x1 = Integer.parseInt(firstSpot.substring(1)) - 1;
         int x2 = Integer.parseInt(lastSpot.substring(1)) - 1;
-        System.out.println("("+x1+","+y1+")");
-        System.out.println("("+x2+","+y2+")");
         Ship curShip = new Ship(name, length);
         if(y1 == y2) {
             if(x1 > x2) {int temp = x1; x1=x2; x2=temp;}

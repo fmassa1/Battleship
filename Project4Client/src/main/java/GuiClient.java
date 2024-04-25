@@ -58,7 +58,6 @@ public class GuiClient extends Application{
 			Platform.runLater(()->{
 				if(data instanceof Move) {
 					Move nextMove = (Move) data;
-					nextMove.printMove();
 					if(game.setShotPlayer(nextMove.getX(), nextMove.getY())) {
 						opMove.setText(game.playerMoveChecker(nextMove));
 					}
@@ -254,7 +253,6 @@ public class GuiClient extends Application{
 			}
 			else {title.setText("You have missed");}
 			clickedButton.setDisable(true);
-			System.out.println("Button clicked at: " + row + ", " + col);
 			clientConnection.send(new Move(row, col));
 			turn.setText("Opponents turn");
 			myTurn = false;
