@@ -122,26 +122,29 @@ public class GuiClient extends Application{
 		b4.setOnAction(e->{
 			String selectedShip = shipDropDown.getValue();
 			String placement = c1.getText();
-			if (selectedShip != null) {
-				if(game.setShipLocation(selectedShip, placement)) {
-					shipDropDown.getItems().remove(selectedShip);
-					updatePlayerGrid();
-					c1.clear();
-					if(shipDropDown.getItems().isEmpty()) {
-						hBox.getChildren().add(b5);
-						b4.setDisable(true);
-						c1.setDisable(true);
-						shipDropDown.setDisable(true);
+			c1.clear();
+			if(!placement.contains("-") || placement.length() < 5) {
+				c1.setPromptText("Invalid input, try again. Example: A1-A5");
+			}
+			else {
+				if (selectedShip != null) {
+					if (game.setShipLocation(selectedShip, placement)) {
+						shipDropDown.getItems().remove(selectedShip);
+						updatePlayerGrid();
+						if (shipDropDown.getItems().isEmpty()) {
+							hBox.getChildren().add(b5);
+							b4.setDisable(true);
+							c1.setDisable(true);
+							shipDropDown.setDisable(true);
+						} else {
+							c1.setPromptText("Success, keep placing");
+						}
+					} else {
+						c1.setPromptText("Invalid placement or spot taken, try again");
 					}
-					else {
-						c1.setPromptText("Spot already taken, try again");
-					}
+				} else {
+					c1.setPromptText("No ship selected, try again");
 				}
-				else {
-					c1.setPromptText("Invalid placement, try again");
-				}
-			} else {
-				c1.setPromptText("No ship selected, try again");
 			}
 		});
 		b5.setOnAction(e->{
