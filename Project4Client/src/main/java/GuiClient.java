@@ -133,12 +133,15 @@ public class GuiClient extends Application{
 						c1.setDisable(true);
 						shipDropDown.setDisable(true);
 					}
+					else {
+						c1.setPromptText("Spot already taken, try again");
+					}
 				}
 				else {
-					c1.setPromptText("Error, try again");
+					c1.setPromptText("Invalid placement, try again");
 				}
 			} else {
-				c1.setPromptText("Error, try again");
+				c1.setPromptText("No ship selected, try again");
 			}
 		});
 		b5.setOnAction(e->{
@@ -157,7 +160,6 @@ public class GuiClient extends Application{
 					ships.add(new Ship(x));
 				}
 				clientConnection.send(ships);
-				turn.setText("Opponent's turn");
 				myTurn = false;
 			}
 			else {
