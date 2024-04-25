@@ -125,6 +125,7 @@ public class Server{
 										ClientThread temp = pairedClients.get(this);
 										pairedClients.remove(temp);
 										pairedClients.remove(this);
+										pvp = false;
 									}
 								}
 							} else if (data instanceof Move) {

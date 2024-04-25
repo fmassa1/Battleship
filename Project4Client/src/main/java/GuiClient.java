@@ -58,6 +58,7 @@ public class GuiClient extends Application{
 			Platform.runLater(()->{
 				if(data instanceof Move) {
 					Move nextMove = (Move) data;
+					nextMove.printMove();
 					if(game.setShotPlayer(nextMove.getX(), nextMove.getY())) {
 						opMove.setText(game.playerMoveChecker(nextMove));
 					}
