@@ -1,4 +1,8 @@
-
+// Ricky Massa
+// 04-25-2024
+// UIC Spring 2024
+// GuiServer.java
+// UI for the server
 import java.util.HashMap;
 
 import javafx.application.Application;

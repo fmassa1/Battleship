@@ -1,3 +1,9 @@
+// Ricky Massa
+// 04-25-2024
+// UIC Spring 2024
+// Grid.java
+// Constructs a 10x10 grid of gridboxes
+
 import java.io.Serializable;
 import java.util.ArrayList;
 

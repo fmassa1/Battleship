@@ -1,11 +1,13 @@
+// Ricky Massa
+// 04-25-2024
+// UIC Spring 2024
+// GuiClient.java
+// UI for the battleship game on the client side
+
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -22,7 +24,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.scene.control.ComboBox;
-import javafx.util.Duration;
 import javafx.scene.text.Font;
 
 

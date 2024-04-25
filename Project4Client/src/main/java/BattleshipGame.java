@@ -1,8 +1,8 @@
-import javafx.scene.layout.GridPane;
-import jdk.tools.jlink.internal.Platform;
-
-import java.io.Serializable;
-import java.util.ArrayList;
+// Ricky Massa
+// 04-25-2024
+// UIC Spring 2024
+// BattleshipGame.java
+// Contains the logic of the game and keeps tracks of both players
 
 public class BattleshipGame {
     BattleshipPlayer player;

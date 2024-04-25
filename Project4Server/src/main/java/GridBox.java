@@ -1,5 +1,10 @@
+// Ricky Massa
+// 04-25-2024
+// UIC Spring 2024
+// GridBox.java
+// Used to keep track of a component on a grid
+
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class GridBox implements Serializable {
     private static final long serialVersionUID = 42L;
@@ -23,6 +28,9 @@ public class GridBox implements Serializable {
         if(shot) {return "shot";}
         return "none";
     }
-    public void setShot() {shot = true;}
+    public boolean setShot() {
+        shot = true;
+        return ship;
+    }
 
 }

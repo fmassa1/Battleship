@@ -1,3 +1,9 @@
+// Ricky Massa
+// 04-25-2024
+// UIC Spring 2024
+// Grid.java
+// Constructs a 10x10 grid of gridboxes
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -34,5 +40,5 @@ public class Grid implements Serializable {
 
     public void setShip(int x, int y) {grid.get(y).get(x).setShip();}
 
-    public void setShot(int x, int y) {grid.get(x).get(y).setShot();}
+    public boolean setShot(int x, int y) {return grid.get(x).get(y).setShot();}
 }

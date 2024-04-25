@@ -1,7 +1,11 @@
-import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Random;
+// Ricky Massa
+// 04-25-2024
+// UIC Spring 2024
+// Message.java
+// class that is used for sending messages between clients
 
+import java.io.Serializable;
+import java.util.Random;
 
 public class Message implements Serializable {
     private static final long serialVersionUID = 42L;

@@ -1,5 +1,10 @@
-import java.io.Serializable;
+// Ricky Massa
+// 04-25-2024
+// UIC Spring 2024
+// Move.java
+// Used to send each move between server and clients
 
+import java.io.Serializable;
 public class Move implements Serializable {
     private static final long serialVersionUID = 42L;
 
@@ -24,9 +29,6 @@ public class Move implements Serializable {
         }
         Move move = (Move) obj;
         return x == move.x && y == move.y;
-    }
-    public void printMove() {
-        System.out.println("("+x+","+y+")");
     }
 
     public int getX() {return x;}

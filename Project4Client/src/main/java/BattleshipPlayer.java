@@ -1,6 +1,10 @@
-import java.io.Serializable;
+// Ricky Massa
+// 04-25-2024
+// UIC Spring 2024
+// BattleshipPlayer.java
+// Contains the information for a player
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
 
 public class BattleshipPlayer{
@@ -73,11 +77,6 @@ public class BattleshipPlayer{
             for (int i = y1; i <= y2; i++) {grid.setShip(x1, i); curShip.setLocation(new Move(i,x1));}
         }
         playerShips.add(curShip);
-        System.out.println(curShip.getType());
-        System.out.println(curShip.getHealth());
-        for(Move i : curShip.getLocation()) {
-            i.printMove();
-        }
         return true;
     }
 

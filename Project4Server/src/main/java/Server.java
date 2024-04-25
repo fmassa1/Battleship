@@ -1,4 +1,9 @@
-import java.io.IOException;
+// Ricky Massa
+// 04-25-2024
+// UIC Spring 2024
+// Server.java
+// Server class, that is used to send and receive object from clients
+
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -7,12 +12,6 @@ import java.net.Socket;
 import java.util.*;
 import java.util.function.Consumer;
 
-import javafx.application.Platform;
-import javafx.scene.control.ListView;
-/*
- * Clicker: A: I really get it    B: No idea what you are talking about
- * C: kind of following
- */
 
 public class Server{
 

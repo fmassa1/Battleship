@@ -1,3 +1,9 @@
+// Ricky Massa
+// 04-25-2024
+// UIC Spring 2024
+// Ship.java
+// Holds the information of a ship
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
