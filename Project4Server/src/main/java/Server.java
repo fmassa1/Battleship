@@ -118,14 +118,17 @@ public class Server{
 										pairedClients.put(client2, client1);
 										client1.out.writeObject("begin");
 										client2.out.writeObject("begin");
+										callback.accept("Client " + client1.count + " and Client " + client2.count + " have paired up!");
 									}
 								}
 								else if (data.toString().equals("dequeue")) {
 									if(pairedClients.containsKey(this)) {
 										ClientThread temp = pairedClients.get(this);
+										callback.accept("Client " + temp.count + " and Client " + pairedClients.get(temp).count + " have finished their game.");
 										pairedClients.remove(temp);
 										pairedClients.remove(this);
 										pvp = false;
+
 									}
 								}
 							} else if (data instanceof Move) {

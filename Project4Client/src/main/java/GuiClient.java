@@ -31,7 +31,7 @@ public class GuiClient extends Application{
 
 	TextField c1, c2;
 	Text title, turn, opMove;
-	Button b1, b2, b3, b4, b5, b6, b7, b8;
+	Button b1, b2, b3, b4, b5, b6, b7, b8,b9;
 	HashMap<String, Scene> sceneMap;
 	VBox clientBox, chatBox, optionBox;
 	HBox hBox, hBox2;
@@ -111,12 +111,15 @@ public class GuiClient extends Application{
 		b6 = new Button("Back to Menu");
 		b7 = new Button("Random");
 		b8 = new Button("Send Message");
+		b9 = new Button("Back");
 		turn = new Text("");
 		opMove = new Text("");
 
 
 		b1.setOnAction(e->{resetGame();primaryStage.setScene(mainGame()); game.generateEnemyLocation();});
 		b2.setOnAction(e->{resetGame();game.setOnline(); clientConnection.send("queue");primaryStage.setScene(queueScreen());});
+		b3.setOnAction(e->{resetGame();primaryStage.setScene(rulesScreen());});
+
 
 		b4.setOnAction(e->{
 			String selectedShip = shipDropDown.getValue();
@@ -200,6 +203,7 @@ public class GuiClient extends Application{
 			}
 			c2.clear();
 		});
+		b9.setOnAction(e->{primaryStage.setScene(createStart());});
 
 		for (int row = 0; row < 10; row++) {
 			for (int col = 0; col < 10; col++) {
@@ -313,18 +317,41 @@ public class GuiClient extends Application{
 		borderPane.setPadding(new Insets(20));
 		borderPane.setCenter(clientBox);
 		clientBox.setStyle("-fx-background-radius: 50;" + "-fx-background-color: #F2EFE5;");
-		borderPane.setStyle("-fx-background-color: #C7C8CC;");
+		borderPane.setStyle("-fx-background-color: #92C7CF;");
 		return new Scene(borderPane, 400, 300);
+	}
+	public Scene rulesScreen() {
+		title = new Text("Rules");
+		title.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+		Text rules = new Text("-After selecting mode users must place all 5 of their ships\n" +
+				"   User must type in specified location by specifying the spot the ship begins and ends seperated by a '-'\n" +
+				"      Good Examples of placing a Destroyer (2 spots)\n" +
+				"          A1-A2, A2-A1, A1-B1, C10-B10\n" +
+				"      Bad Examples of placing a Destroyer (2 spots)\n" +
+				"          A1-A10, A2-D1, a1-b1, A1_B1\n" +
+				"-After placing ships the user will take turns taking shots with the opponent\n" +
+				"-If shot hits then the tile will be marked red, else it misses it will be blue\n" +
+				"-If a ship is sank it is announced\n" +
+				"-Whoever sinks all 5 of their opponents ships first is the winner");
+		clientBox = new VBox(20, title, rules, b9);
+		clientBox.setAlignment(Pos.CENTER);
+		borderPane = new BorderPane();
+		borderPane.setPadding(new Insets(20));
+		borderPane.setCenter(clientBox);
+		clientBox.setStyle("-fx-background-radius: 50;" + "-fx-background-color: #FBF9F1;");
+		borderPane.setStyle("-fx-background-color: #92C7CF;");
+		return new Scene(borderPane, 600, 300);
 	}
 	public Scene createStart() {
 		title = new Text("Battleship");
+		title.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		clientBox = new VBox(20, title, b1, b2, b3);
 		clientBox.setAlignment(Pos.CENTER);
 		borderPane = new BorderPane();
 		borderPane.setPadding(new Insets(20));
 		borderPane.setCenter(clientBox);
-		clientBox.setStyle("-fx-background-radius: 50;" + "-fx-background-color: #F2EFE5;");
-		borderPane.setStyle("-fx-background-color: #C7C8CC;");
+		clientBox.setStyle("-fx-background-radius: 50;" + "-fx-background-color: #FBF9F1;");
+		borderPane.setStyle("-fx-background-color: #92C7CF;");
 		return new Scene(borderPane, 400, 300);
 	}
 	public Scene mainGame() {
