@@ -124,6 +124,7 @@ public class Server{
 								else if (data.toString().equals("dequeue")) {
 									if(pairedClients.containsKey(this)) {
 										ClientThread temp = pairedClients.get(this);
+										pairedClients.get(this).pvp = false;
 										callback.accept("Client " + temp.count + " and Client " + pairedClients.get(temp).count + " have finished their game.");
 										pairedClients.remove(temp);
 										pairedClients.remove(this);
