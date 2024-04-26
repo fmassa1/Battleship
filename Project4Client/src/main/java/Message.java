@@ -39,6 +39,7 @@ public class Message implements Serializable {
                 "You're a rockstar!",
                 "You're awesome!"
         };
+        message = message.toLowerCase();
         if(message.contains("shit") || message.contains("ass") || message.contains("damn") || message.contains("dumb") ||
                 message.contains("fuck") || message.contains("suck") || message.contains("bad") || message.contains("butt") ||
                 message.contains("stupid") || message.contains("idiot") || message.contains("poop") || message.contains("dick") ) {

@@ -26,7 +26,6 @@ import javafx.stage.WindowEvent;
 import javafx.scene.control.ComboBox;
 import javafx.scene.text.Font;
 
-
 public class GuiClient extends Application{
 
 	TextField c1, c2;
@@ -39,7 +38,6 @@ public class GuiClient extends Application{
 	BorderPane borderPane;
 	ComboBox<String> shipDropDown;
 	ListView<String> chat;
-
 
 	private Button[][] enemyGridButtons = new Button[10][10];;
 	private Button[][] playerGridButtons = new Button[10][10];;
